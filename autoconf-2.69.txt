@@ -1,0 +1,36 @@
+                          Upload Information Template for Hobbes.nmsu.edu
+                          ===============================================
+
+        Archive Filename: autoconf-2.69.zip
+       Short Description: autoconf v2.69 for OS/2
+        Long Description: autoconf v2.69 for OS/2.
+Autoconf is an extensible package of M4 macros that produce shell
+scripts to automatically configure software source code packages.
+These scripts can adapt the packages to many kinds of UNIX-like
+systems without manual user intervention.  Autoconf creates a
+configuration script for a package from a template file that lists the
+operating system features that the package can use, in the form of M4
+macro calls.
+
+2.61r2 : set LN_S to 'cp -f' instead of 'ln -s'.
+
+      Proposed directory
+           for placement: /pub/os2/dev/util
+
+               Your name: KO Myung-Hun
+           Email address: komh@chollian.net
+    Program contact name: (same)
+   Program contact email: (same)
+             Program URL: (none) 
+
+      Would you like the
+   contact email address
+    included in listings? yes
+
+Operating System/Version: 
+ Additional requirements: Perl 5.8.0
+
+                Replaces: (none)
+
+
+

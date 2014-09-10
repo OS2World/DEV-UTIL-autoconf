@@ -1,0 +1,76 @@
+diff -uNr  lib/autoconf/c.m4.org lib/autoconf/c.m4
+--- lib/autoconf/c.m4.org	2012-01-21 22:46:38.000000000 +0900
++++ lib/autoconf/c.m4	2013-05-19 14:19:54.000000000 +0900
+@@ -509,7 +509,10 @@
+   [ac_save_c_werror_flag=$ac_c_werror_flag
+    ac_c_werror_flag=yes
+    ac_cv_prog_cc_g=no
+-   CFLAGS="-g"
++   dnl On OS/2 $ac_objext might depend on CFLAGS, so "gcc -c -g" might fail because
++   dnl the object file can not be found, but "gcc -c -g $CFLAGS" will succeed.
++   dnl CFLAGS="-g"
++   CFLAGS="$CFLAGS -g"
+    _AC_COMPILE_IFELSE([AC_LANG_PROGRAM()],
+      [ac_cv_prog_cc_g=yes],
+      [CFLAGS=""
+diff -uNr  lib/autoconf/general.m4.org lib/autoconf/general.m4
+--- lib/autoconf/general.m4.org	2012-04-25 11:37:26.000000000 +0900
++++ lib/autoconf/general.m4	2013-05-19 14:19:54.000000000 +0900
+@@ -932,7 +932,7 @@
+   esac
+   # Be sure to have absolute directory names.
+   case $ac_val in
+-    [[\\/$]]* | ?:[[\\/]]* )  continue;;
++    [[\\/$]]* | ?:[[\\/]]* | ?: )  continue;;
+     NONE | '' ) case $ac_var in *prefix ) continue;; esac;;
+   esac
+   AC_MSG_ERROR([expected an absolute directory name for --$ac_var: $ac_val])
+@@ -1901,6 +1901,35 @@
+       || AC_MSG_FAILURE([failed to load site script $ac_site_file])
+   fi
+ done
++# Backslashes into forward slashes:
++# The following OS/2 specific code is performed AFTER config.site
++# has been loaded to allow users to change their environment there.
++# This strange code is necessary to deal with handling of backslashes by ksh.
++
++if test "$ac_emxsupport" != "no" -a "$ac_emxsupport" != "NO"; then
++  ac_save_IFS="$IFS"
++  IFS="\\"
++  ac_TEMP_PATH=
++  for ac_dir in $PATH; do
++    IFS=$ac_save_IFS
++    if test -z "$ac_TEMP_PATH"; then
++      ac_TEMP_PATH="$ac_dir"
++    else
++      ac_TEMP_PATH="$ac_TEMP_PATH/$ac_dir"
++    fi
++  done
++  export PATH="$ac_TEMP_PATH"
++  unset ac_TEMP_PATH
++fi
++
++# set ac_executable_extensions!
++if ls.exe --version >/dev/null 2>/dev/null; then
++  if test "$ac_executable_extensions" = ""; then
++    AC_MSG_WARN([ac_executable_extensions not set, assuming .exe])
++    ac_executable_extensions=".exe"
++    export ac_executable_extensions
++  fi
++fi
+ ])
+ 
+ 
+diff -uNr  lib/autoconf/programs.m4.org lib/autoconf/programs.m4
+--- lib/autoconf/programs.m4.org	2012-01-21 22:46:38.000000000 +0900
++++ lib/autoconf/programs.m4	2013-05-19 14:19:54.000000000 +0900
+@@ -799,6 +799,9 @@
+ AC_DEFUN([AC_PROG_LN_S],
+ [AC_MSG_CHECKING([whether ln -s works])
+ AC_SUBST([LN_S], [$as_ln_s])dnl
++case $host_os in
++  os2*) test "$LN_S" = "ln -s" && LN_S="cp -f" ;;
++esac
+ if test "$LN_S" = "ln -s"; then
+   AC_MSG_RESULT([yes])
+ else
